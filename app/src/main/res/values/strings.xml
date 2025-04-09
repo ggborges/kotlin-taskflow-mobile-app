@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TaskFlow</string>
+    <string name="title_activity_create_task">CreateTaskActivity</string>
+    <string name="taskTitle">Título da tarefa</string>
+    <string name="description">Descrição</string>
+    <string name="btnCreate">Criar tarefa</string>
+    <string name="selectDate">Selecionar data</string>
+    <string name="selectTime">Selecionar horário</string>
+    <string name="header">Criação de Tarefa</string>
+    <string name="priority_label">Prioridade: %1$s</string>
+    <string name="dateTime_label">Sem data definida</string>
+    <string name="addTaskFAB">Adicionar tarefa</string>
+</resources>
