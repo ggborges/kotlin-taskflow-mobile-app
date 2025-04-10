@@ -1,19 +1,26 @@
 package borges.gustavo.taskflow
 
+import TaskViewModel
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import borges.gustavo.taskflow.activity.CreateTaskActivity
 import borges.gustavo.taskflow.adapter.TaskAdapter
+import borges.gustavo.taskflow.database.db.RoomDB
 import borges.gustavo.taskflow.databinding.ActivityMainBinding
-import borges.gustavo.taskflow.model.Task
+import borges.gustavo.taskflow.viewmodel.TaskViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskAdapter: TaskAdapter
-    private val taskList = mutableListOf<Task>()
+    private lateinit var taskViewModel: TaskViewModel
+    private lateinit var TaskDB: RoomDB
+
+    // private val taskList = mutableListOf<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +29,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Inicializa RecyclerView
-        taskAdapter = TaskAdapter(this, taskList)
+        taskAdapter = TaskAdapter(this)
         binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewTasks.adapter = taskAdapter
 
+        // Configura o ViewModel
+        // ViewModel com o singleton do banco de dados
+        val db = RoomDB.getDatabase(applicationContext)
+        val taskDao = db.taskDao()
+        val factory = TaskViewModelFactory(taskDao)
+        taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+
+        // Observa o LiveData para atualizações na lista de tarefas
+        taskViewModel.allTasks.observe(this, Observer { tasks ->
+            taskAdapter.submitList(tasks) // Atualiza a lista do RecyclerView
+        })
+
+        /*
+        Pegando Task através de retorno de Intent (deprecated)
         val launcher = registerForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -42,14 +63,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+         */
 
         // FAB para criar nova tarefa
         binding.fabAddTask.setOnClickListener {
             val intent = Intent(this, CreateTaskActivity::class.java)
-            launcher.launch(intent)
+            startActivity(intent)
         }
 
-        // (Exemplo) Adicionando tarefa fake para teste
+        /*
+        Hardcode de Task na Lista
         taskList.add(
             Task(
                 title = "Estudar Android",
@@ -59,5 +82,14 @@ class MainActivity : AppCompatActivity() {
             )
         )
         taskAdapter.notifyItemInserted(taskList.size - 1)
+         */
     }
+
+    override fun onResume() {
+        super.onResume()
+        taskViewModel.allTasks.observe(this) { tasks ->
+            taskAdapter.submitList(tasks)
+        }
+    }
+
 }

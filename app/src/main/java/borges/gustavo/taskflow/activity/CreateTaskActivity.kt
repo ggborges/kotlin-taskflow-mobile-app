@@ -1,6 +1,7 @@
 package borges.gustavo.taskflow.activity
 
 
+import TaskViewModel
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,11 +13,17 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import borges.gustavo.taskflow.databinding.ActivityCreateTaskBinding
 import borges.gustavo.taskflow.model.Task
 import borges.gustavo.taskflow.utils.Util
 import java.util.Calendar
 import java.util.TimeZone
+import borges.gustavo.taskflow.database.db.RoomDB
+import borges.gustavo.taskflow.viewmodel.TaskViewModelFactory
+import kotlinx.coroutines.launch
 
 class CreateTaskActivity : AppCompatActivity() {
 
@@ -91,7 +98,6 @@ class CreateTaskActivity : AppCompatActivity() {
                 } catch (e: ActivityNotFoundException) {
                     Toast.makeText(this, "Nenhum app de calendário disponível", Toast.LENGTH_SHORT).show()
                 }
-
                 /*val resolvedActivity = calendarIntent.resolveActivity(packageManager)
                 Log.d("CALENDAR_INTENT", "Resolved activity: $resolvedActivity")
 
@@ -106,10 +112,7 @@ class CreateTaskActivity : AppCompatActivity() {
                         Toast.makeText(this, "Nenhum app de calendário disponível", Toast.LENGTH_SHORT).show()
                     }
                 }*/
-
             }
-
-            // APRIMORAR: SALVAR TAREFA EM MEMÓRIA OU BANCO DE DADOS
 
             val dateTimeFormatted = selectedDate?.let { Util.formatCalendarDateTime(it) }
 
@@ -120,16 +123,38 @@ class CreateTaskActivity : AppCompatActivity() {
                 dateTime = dateTimeFormatted
             )
 
-            Toast.makeText(this, "Tarefa criada: $title ($priority)", Toast.LENGTH_SHORT).show()
+            // Acessando instância do Singleton, salvando nova Task no DB e enviando a Task com ID para a MainActivity (lista de tarefas)
+            val db = RoomDB.getDatabase(applicationContext)
+            val taskDao = db.taskDao()
+            val factory = TaskViewModelFactory(taskDao)
+            val viewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java] // substitui o get por index
 
-            // Retornar a tarefa criada para a MainActivity
+            lifecycleScope.launch {
+                val id = viewModel.insertTask(newTask)
+                Log.d("TASK_ID", "ID gerado pelo Room: $id")
+                val taskWithId = newTask.copy(id = id.toInt())
+                /*
+                Retornar Task para a MainActivity (deprecated)
+                val resultIntent = Intent().apply {
+                    putExtra("new_task", taskWithId)
+                    Log.d("RESULT_INTENT", "putExtra executado")
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                Log.d("SET_RESULT", "setResult executado")
+                 */
+                finish()
+            }
+
+            Toast.makeText(this, "Tarefa criada: $title ($priority)", Toast.LENGTH_SHORT).show()
+            /* Retornar a tarefa criada para a MainActivity (deprecated)
             val resultIntent = Intent().apply {
-                putExtra("new_task", newTask)
+                putExtra("new_task", taskWithId)
                 Log.d("RESULT_INTENT", "putExtra executado")
             }
             setResult(Activity.RESULT_OK, resultIntent)
             Log.d("SET_RESULT", "setResult executado")
             finish()
+             */
         }
 
         binding.buttonBack.setOnClickListener {

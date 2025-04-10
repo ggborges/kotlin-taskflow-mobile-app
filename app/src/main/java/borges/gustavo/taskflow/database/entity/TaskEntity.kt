@@ -2,6 +2,8 @@ package borges.gustavo.taskflow.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
+import borges.gustavo.taskflow.model.Task
+import borges.gustavo.taskflow.utils.Util.formatDateTime
 
 @Entity(tableName = "tasks")
 data class TaskEntity(
@@ -25,4 +27,16 @@ data class TaskEntity(
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long
-)
+) {
+
+    fun toModel(): Task {
+        return Task(
+            id = this.id,
+            title = this.title,
+            description = this.description,
+            priority = this.priority,
+            dateTime = formatDateTime(this.scheduledAt) // Conversão de Long (timestamp) para String
+        )
+    }
+
+}
