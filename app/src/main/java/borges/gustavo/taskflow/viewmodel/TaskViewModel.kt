@@ -38,4 +38,11 @@ class TaskViewModel(private val taskDao: TaskDao) : ViewModel() {
             taskDao.delete(task.toEntity())  // Convertendo Task para TaskEntity
         }
     }
+
+    fun getTaskById(id: Int): LiveData<Task> {
+        return liveData {
+            val taskEntity = taskDao.getTaskById(id)
+            emit(taskEntity?.toModel()!!)
+        }
+    }
 }

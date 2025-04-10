@@ -1,24 +1,32 @@
 package borges.gustavo.taskflow.adapter
 
+import TaskViewModel
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import borges.gustavo.taskflow.R
+import borges.gustavo.taskflow.activity.TaskCardActivity
 import borges.gustavo.taskflow.model.Task
 
-class TaskAdapter(private val context: Context) :
-    ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallback()) {
+class TaskAdapter(
+    private val context: Context,
+    private val taskViewModel: TaskViewModel // Adicionando o TaskViewModel no Adapter
+) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.txtTaskCardTitle)
         val description: TextView = itemView.findViewById(R.id.txtTaskCardDescription)
         val priority: TextView = itemView.findViewById(R.id.txtTaskCardPriority)
         val dateTime: TextView = itemView.findViewById(R.id.txtTaskCardDateTime)
+        val btnViewTask: Button = itemView.findViewById(R.id.btnViewTask)  // Botão de visualizar
+        val btnDeleteTask: Button = itemView.findViewById(R.id.btnDeleteTask)  // Botão de deletar
     }
 
     // DiffUtil Callback para otimizar as mudanças na lista
@@ -46,6 +54,18 @@ class TaskAdapter(private val context: Context) :
         holder.description.text = task.description
         holder.priority.text = context.getString(R.string.priority_label, task.priority)
         holder.dateTime.text = task.dateTime ?: context.getString(R.string.dateTime_label)
+
+        // Clique para visualizar a tarefa
+        holder.btnViewTask.setOnClickListener {
+            val intent = Intent(context, TaskCardActivity::class.java)
+            intent.putExtra("taskId", task.id) // Passando o ID da tarefa
+            context.startActivity(intent)
+        }
+
+        // Clique para deletar a tarefa
+        holder.btnDeleteTask.setOnClickListener {
+            taskViewModel.deleteTask(task)
+        }
     }
 
     /* Implementação sem ListAdapter

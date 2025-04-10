@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var taskViewModel: TaskViewModel
-    private lateinit var TaskDB: RoomDB
 
     // private val taskList = mutableListOf<Task>()
 
@@ -28,17 +27,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializa RecyclerView
-        taskAdapter = TaskAdapter(this)
-        binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this)
-        binding.recyclerViewTasks.adapter = taskAdapter
-
-        // Configura o ViewModel
         // ViewModel com o singleton do banco de dados
         val db = RoomDB.getDatabase(applicationContext)
         val taskDao = db.taskDao()
         val factory = TaskViewModelFactory(taskDao)
         taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+
+        // Inicializa RecyclerView
+        taskAdapter = TaskAdapter(this, taskViewModel)
+        binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewTasks.adapter = taskAdapter
 
         // Observa o LiveData para atualizações na lista de tarefas
         taskViewModel.allTasks.observe(this, Observer { tasks ->

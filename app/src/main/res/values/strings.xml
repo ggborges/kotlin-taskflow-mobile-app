@@ -11,4 +11,10 @@
     <string name="dateTime_label">Sem data definida</string>
     <string name="addTaskFAB">Adicionar tarefa</string>
     <string name="back">Voltar</string>
+    <string name="view">Visualizar</string>
+    <string name="delete">Excluir</string>
+    <string name="title_activity_task_card">TaskCardActivity</string>
+    <string name="descriptionCard">Descrição:</string>
+    <string name="priority">Prioridade:</string>
+    <string name="date_time">Data e horário:</string>
 </resources>
