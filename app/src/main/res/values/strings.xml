@@ -10,4 +10,5 @@
     <string name="priority_label">Prioridade: %1$s</string>
     <string name="dateTime_label">Sem data definida</string>
     <string name="addTaskFAB">Adicionar tarefa</string>
+    <string name="back">Voltar</string>
 </resources>

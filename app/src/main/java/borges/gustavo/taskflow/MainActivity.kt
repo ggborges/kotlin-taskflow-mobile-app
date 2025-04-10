@@ -26,10 +26,27 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewTasks.adapter = taskAdapter
 
+        val launcher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val task = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    result.data?.getSerializableExtra("new_task", Task::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    result.data?.getSerializableExtra("new_task") as? Task
+                }
+                task?.let {
+                    taskList.add(it)
+                    taskAdapter.notifyItemInserted(taskList.size - 1)
+                }
+            }
+        }
+
         // FAB para criar nova tarefa
         binding.fabAddTask.setOnClickListener {
             val intent = Intent(this, CreateTaskActivity::class.java)
-            startActivity(intent)
+            launcher.launch(intent)
         }
 
         // (Exemplo) Adicionando tarefa fake para teste

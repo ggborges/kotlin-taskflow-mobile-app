@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="30dp"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:text="@string/header" />
 
         <!-- Título -->
@@ -46,13 +46,14 @@
         <!-- Selecionar Data -->
         <Button
             android:id="@+id/btnSelectDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/selectDate" />
 
+        <!-- Selecionar Horário -->
         <Button
             android:id="@+id/btnSelectTime"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/selectTime" />
 
@@ -60,9 +61,18 @@
         <Button
             android:id="@+id/btnCreateTsk"
             android:text="@string/btnCreate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="24dp" />
+
+        <!-- Voltar -->
+        <Button
+            android:id="@+id/buttonBack"
+            android:text="@string/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 </ScrollView>

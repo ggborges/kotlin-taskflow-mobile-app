@@ -1,15 +1,20 @@
 package borges.gustavo.taskflow.activity
 
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import borges.gustavo.taskflow.databinding.ActivityCreateTaskBinding
+import borges.gustavo.taskflow.model.Task
+import borges.gustavo.taskflow.utils.Util
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -61,22 +66,19 @@ class CreateTaskActivity : AppCompatActivity() {
             }, hour, minute, true).show()
         }
 
-
         // Criar tarefa
         binding.btnCreateTsk.setOnClickListener {
             val title = binding.editTextTitle.text.toString()
             val description = binding.editTextDescription.text.toString()
             val priority = binding.spinnerPriority.selectedItem.toString()
 
-            // APRIMORAR: SALVAR TAREFA OU USO DE INTENT PARA OUTRA TELA
-
             // Se a data/hora foi selecionada, criar evento no calendário
             selectedDate?.let { calendar ->
                 val startMillis = calendar.timeInMillis
                 val endMillis = startMillis + 60 * 60 * 1000 // Evento de 1 hora
 
-                val intent = Intent(Intent.ACTION_INSERT).apply {
-                    data = CalendarContract.Events.CONTENT_URI
+                val calendarIntent = Intent(Intent.ACTION_EDIT).apply {
+                    type = "vnd.android.cursor.item/event"
                     putExtra(CalendarContract.Events.TITLE, title)
                     putExtra(CalendarContract.Events.DESCRIPTION, description)
                     putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
@@ -84,32 +86,54 @@ class CreateTaskActivity : AppCompatActivity() {
                     putExtra(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
                 }
 
-                if (intent.resolveActivity(packageManager) != null) {
-                    startActivity(intent)
-                } else {
+                try {
+                    startActivity(calendarIntent)
+                } catch (e: ActivityNotFoundException) {
                     Toast.makeText(this, "Nenhum app de calendário disponível", Toast.LENGTH_SHORT).show()
                 }
+
+                /*val resolvedActivity = calendarIntent.resolveActivity(packageManager)
+                Log.d("CALENDAR_INTENT", "Resolved activity: $resolvedActivity")
+
+                if (resolvedActivity != null) {
+                    startActivity(calendarIntent)
+                } else {
+                    // Fallback: tentar abrir diretamente o app do Google Calendar
+                    val fallbackIntent = packageManager.getLaunchIntentForPackage("com.google.android.calendar")
+                    if (fallbackIntent != null) {
+                        startActivity(fallbackIntent)
+                    } else {
+                        Toast.makeText(this, "Nenhum app de calendário disponível", Toast.LENGTH_SHORT).show()
+                    }
+                }*/
+
             }
 
-            /*val intent = Intent(Intent.ACTION_INSERT).apply {
-                data = CalendarContract.Events.CONTENT_URI
-                putExtra(CalendarContract.Events.TITLE, title)
-                putExtra(CalendarContract.Events.DESCRIPTION, description)
-                putExtra(CalendarContract.Events.EVENT_LOCATION, "") // opcional
-                putExtra(CalendarContract.Events.ALL_DAY, true) // ou false se quiser data/hora
+            // APRIMORAR: SALVAR TAREFA EM MEMÓRIA OU BANCO DE DADOS
 
-                // Exemplo: evento hoje
-                val startMillis = System.currentTimeMillis()
-                val endMillis = startMillis + 60 * 60 * 1000 // 1h depois
+            val dateTimeFormatted = selectedDate?.let { Util.formatCalendarDateTime(it) }
 
-                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-            }*/
-
-            // Verifica se há app de calendário
-
+            val newTask = Task(
+                title = title,
+                description = description,
+                priority = priority,
+                dateTime = dateTimeFormatted
+            )
 
             Toast.makeText(this, "Tarefa criada: $title ($priority)", Toast.LENGTH_SHORT).show()
+
+            // Retornar a tarefa criada para a MainActivity
+            val resultIntent = Intent().apply {
+                putExtra("new_task", newTask)
+                Log.d("RESULT_INTENT", "putExtra executado")
+            }
+            setResult(Activity.RESULT_OK, resultIntent)
+            Log.d("SET_RESULT", "setResult executado")
+            finish()
+        }
+
+        binding.buttonBack.setOnClickListener {
+            finish() // Fecha a activity e volta pra anterior
         }
     }
 }
