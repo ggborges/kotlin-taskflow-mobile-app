@@ -17,4 +17,5 @@
     <string name="descriptionCard">Descrição:</string>
     <string name="priority">Prioridade:</string>
     <string name="date_time">Data e horário:</string>
+    <string name="editTask">Editar</string>
 </resources>

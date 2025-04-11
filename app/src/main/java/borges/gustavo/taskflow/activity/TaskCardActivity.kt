@@ -30,11 +30,15 @@ class TaskCardActivity : AppCompatActivity() {
 
             // Buscar a tarefa pelo ID
             taskViewModel.getTaskById(taskId).observe(this, Observer { task ->
-                binding.txtTaskTitle.text = task.title
-                binding.txtTaskDescription.text = task.description
-                binding.txtTaskPriority.text = task.priority
-                binding.txtTaskDateTime.text = task.dateTime
+                binding.taskTitle.text = task.title
+                binding.taskDescription.text = task.description
+                binding.taskPriority.text = task.priority
+                binding.taskDateTime.text = task.dateTime
             })
+
+            binding.buttonBack.setOnClickListener {
+                finish()
+            }
         }
     }
 }

@@ -83,11 +83,4 @@ class MainActivity : AppCompatActivity() {
          */
     }
 
-    override fun onResume() {
-        super.onResume()
-        taskViewModel.allTasks.observe(this) { tasks ->
-            taskAdapter.submitList(tasks)
-        }
-    }
-
 }

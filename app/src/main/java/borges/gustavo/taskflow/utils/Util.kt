@@ -1,5 +1,6 @@
 package borges.gustavo.taskflow.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -12,12 +13,13 @@ object Util {
         val year = calendar.get(Calendar.YEAR)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        return "%02d/%02d/%04d às %02d:%02d".format(day, month, year, hour, minute)
+        return "%04d-%02d-%02d %02d:%02d:%02d".format(year, month, day, hour, minute, 0)
     }
 
     fun parseDateTime(dateTime: String?): Long? {
-        // Converter String para Long (timestamp)
-        return dateTime?.let {
+        val cleanedDateTime = dateTime?.trim()
+        Log.d("PARSE_DATE", "Data a ser analisada: $cleanedDateTime")  // Log para debugar
+        return cleanedDateTime?.let {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)?.time
         }
     }

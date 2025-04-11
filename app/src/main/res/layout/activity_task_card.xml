@@ -146,7 +146,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@android:drawable/ic_menu_edit"
-        android:contentDescription="@string/edit"
+        android:contentDescription="@string/editTask"
         app:layout_constraintTop_toBottomOf="@+id/card_task"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
