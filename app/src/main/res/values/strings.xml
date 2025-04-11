@@ -18,4 +18,5 @@
     <string name="priority">Prioridade:</string>
     <string name="date_time">Data e horário:</string>
     <string name="editTask">Editar</string>
+    <string name="complete">Concluir</string>
 </resources>

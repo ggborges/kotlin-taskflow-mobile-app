@@ -9,7 +9,8 @@ data class Task (
     val title: String,
     val description: String,
     val priority: String,
-    val dateTime: String? = null // Pode ser null se a tarefa não tiver data
+    val dateTime: String? = null, // Pode ser null se a tarefa não tiver data
+    var isCompleted: Boolean = false
 )  : java.io.Serializable {
 
     fun toEntity(): TaskEntity {
@@ -18,7 +19,8 @@ data class Task (
             title = this.title,
             description = this.description,
             priority = this.priority,
-            scheduledAt = parseDateTime(this.dateTime), // Conversão de String para Long (timestamp)
+            scheduledAt = parseDateTime(this.dateTime),
+            isCompleted = this.isCompleted,// Conversão de String para Long (timestamp)
             createdAt = System.currentTimeMillis(),
             updatedAt = System.currentTimeMillis()
         )

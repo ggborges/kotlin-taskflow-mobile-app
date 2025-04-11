@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +27,7 @@ class TaskAdapter(
         val description: TextView = itemView.findViewById(R.id.txtTaskCardDescription)
         val priority: TextView = itemView.findViewById(R.id.txtTaskCardPriority)
         val dateTime: TextView = itemView.findViewById(R.id.txtTaskCardDateTime)
+        val checkboxTaskCompleted = itemView.findViewById<CheckBox>(R.id.checkboxTaskCompleted)
         val btnViewTask: Button = itemView.findViewById(R.id.btnViewTask)  // Botão de visualizar
         val btnDeleteTask: Button = itemView.findViewById(R.id.btnDeleteTask)  // Botão de deletar
     }
@@ -54,6 +57,29 @@ class TaskAdapter(
         holder.description.text = task.description
         holder.priority.text = context.getString(R.string.priority_label, task.priority)
         holder.dateTime.text = task.dateTime ?: context.getString(R.string.dateTime_label)
+
+        holder.checkboxTaskCompleted.isChecked = task.isCompleted
+
+        // Aplicar cor verde claro se a tarefa estiver concluída
+        if (task.isCompleted) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.green_light))
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white)) // Cor original
+        }
+
+        // Lidar com o clique no CheckBox para concluir a tarefa
+        holder.checkboxTaskCompleted.setOnCheckedChangeListener { _, isChecked ->
+            task.isCompleted = isChecked  // Atualizar o estado da tarefa
+
+            task.id?.let { taskViewModel.updateTaskCompletion(it, isChecked) }  // Atualiza a tarefa no banco de dados
+
+            // Atualizar a cor do card conforme a conclusão
+            if (isChecked) {
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.green_light))
+            } else {
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+            }
+        }
 
         // Clique para visualizar a tarefa
         holder.btnViewTask.setOnClickListener {

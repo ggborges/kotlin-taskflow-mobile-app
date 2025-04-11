@@ -41,6 +41,14 @@
             android:textColor="#888888"
             android:layout_marginTop="4dp"/>
 
+        <!-- CheckBox para marcar como concluído -->
+        <CheckBox
+            android:id="@+id/checkboxTaskCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/complete"
+            android:layout_marginTop="8dp"/>
+
         <!-- Botões de ações -->
         <LinearLayout
             android:orientation="horizontal"

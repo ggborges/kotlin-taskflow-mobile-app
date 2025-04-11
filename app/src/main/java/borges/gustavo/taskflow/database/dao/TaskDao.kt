@@ -15,7 +15,10 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: TaskEntity)
 
-    @Query("SELECT * FROM tasks")
+    @Query("UPDATE tasks SET isCompleted = :isCompleted WHERE id = :taskId")
+    suspend fun updateTaskCompletion(taskId: Int, isCompleted: Boolean)
+
+    @Query("SELECT * FROM tasks ORDER BY isCompleted, id DESC")
     fun getAllTasks(): LiveData<List<TaskEntity>>
 
     @Query("SELECT * FROM tasks WHERE id = :id")

@@ -22,6 +22,9 @@ data class TaskEntity(
     @ColumnInfo(name = "scheduled_at")
     val scheduledAt: Long?, // Timestamp em Long
 
+    @ColumnInfo(name = "isCompleted")
+    val isCompleted: Boolean = false,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
 
@@ -35,7 +38,8 @@ data class TaskEntity(
             title = this.title,
             description = this.description,
             priority = this.priority,
-            dateTime = formatDateTime(this.scheduledAt) // Conversão de Long (timestamp) para String
+            dateTime = formatDateTime(this.scheduledAt), // Conversão de Long (timestamp) para String
+            isCompleted = this.isCompleted
         )
     }
 

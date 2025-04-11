@@ -45,4 +45,10 @@ class TaskViewModel(private val taskDao: TaskDao) : ViewModel() {
             emit(taskEntity?.toModel()!!)
         }
     }
+
+    fun updateTaskCompletion(taskId: Int, isCompleted: Boolean) {
+        viewModelScope.launch {
+            taskDao.updateTaskCompletion(taskId, isCompleted)
+        }
+    }
 }
