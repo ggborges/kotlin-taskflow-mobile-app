@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504843799283",
+    "project_id": "taskflow-8a386",
+    "storage_bucket": "taskflow-8a386.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504843799283:android:3119ab5b46b687e1100586",
+        "android_client_info": {
+          "package_name": "borges.gustavo.taskflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtRJzZnZLLjtoBcvgc6z77-S_5ITd9qpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
