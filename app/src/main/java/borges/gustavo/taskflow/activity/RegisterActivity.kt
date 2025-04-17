@@ -18,9 +18,10 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.registerButton.setOnClickListener {
+            val name = binding.nameEditText.text.toString()
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-            authViewModel.register(email, password)
+            authViewModel.register(name, email, password)
         }
 
         authViewModel.authResult.observe(this) { result ->

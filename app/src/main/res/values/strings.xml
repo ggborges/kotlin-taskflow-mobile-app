@@ -26,4 +26,9 @@
     <string name="login">Entrar</string>
     <string name="register_question">Não tem uma conta? Cadastre-se</string>
     <string name="register">Cadastrar</string>
+    <string name="title_activity_task_list">TaskListActivity</string>
+    <string name="user_name">Name</string>
+    <string name="register_title">Cadastre-se</string>
+    <string name="welcome">Bem vindo!</string>
+    <string name="welcome_user">Bem vindo, %1$s!</string>
 </resources>

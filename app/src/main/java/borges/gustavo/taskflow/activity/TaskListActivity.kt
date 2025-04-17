@@ -7,10 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import borges.gustavo.taskflow.R
 import borges.gustavo.taskflow.adapter.TaskAdapter
 import borges.gustavo.taskflow.database.db.RoomDB
 import borges.gustavo.taskflow.databinding.ActivityTaskListBinding
 import borges.gustavo.taskflow.viewmodel.TaskViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
+
 
 class TaskListActivity : AppCompatActivity() {
 
@@ -25,6 +28,9 @@ class TaskListActivity : AppCompatActivity() {
 
         binding = ActivityTaskListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val userName = FirebaseAuth.getInstance().currentUser?.displayName
+        binding.welcomeTextView.text = getString(R.string.welcome_user, userName)
 
         // ViewModel com o singleton do banco de dados
         val db = RoomDB.getDatabase(applicationContext)

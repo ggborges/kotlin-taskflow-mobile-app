@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.userProfileChangeRequest
 
 class AuthViewModel : ViewModel() {
 
@@ -24,11 +25,17 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun register(email: String, password: String) {
+    fun register(name: String, email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _authResult.postValue(Result.success(firebaseAuth.currentUser))
+                    val user = firebaseAuth.currentUser
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
+                    user?.updateProfile(profileUpdates)?.addOnCompleteListener {
+                        _authResult.postValue(Result.success(firebaseAuth.currentUser))
+                    }
                 } else {
                     _authResult.postValue(Result.failure(task.exception ?: Exception("Erro desconhecido no cadastro.")))
                 }
