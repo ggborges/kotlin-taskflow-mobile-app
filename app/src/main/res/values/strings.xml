@@ -19,4 +19,11 @@
     <string name="date_time">Data e horário:</string>
     <string name="editTask">Editar</string>
     <string name="complete">Concluir</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="email">Email</string>
+    <string name="password">Senha</string>
+    <string name="login">Entrar</string>
+    <string name="register_question">Não tem uma conta? Cadastre-se</string>
+    <string name="register">Cadastrar</string>
 </resources>
